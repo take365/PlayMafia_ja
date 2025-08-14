@@ -1,69 +1,69 @@
 # PlayMafia
-PlayMafia is a web game that runs in the browser, based on the party game "Mafia" also known as "Werewolf" see [wiki entry](http://en.wikipedia.org/wiki/Mafia_%28party_game%29) for details on the game. This implementation has been written in NodeJS with SockJS &amp; Redis and is heavily based on the StarCraft 2 Mafia Mod
-.
+PlayMafia はブラウザで動作する人狼系パーティーゲームです。NodeJS・SockJS・Redis で実装され、StarCraft II の Mafia Mod をベースにしています。
 
-A server admin can simply launch the PlayMafia code, any number of users can then create and join games and play mafia with each other.
+サーバー管理者はコードを起動するだけで、複数のユーザーがゲームを作成して参加できます。
 
-## Features
-##### Feature list
-* A front-end website, with a full description of the game for new players. The game is completely run in the browser for all players - no game client install required.
-* Ability for users to create accounts, login, add friends and private message each other on the server.
-* Ability for users to create & join lobbies, set game settings and chat pre-game.
-* A modular structure enabling an admin to easily skin the game, make changes to gameplay, text and images and the games roles.
-* Ability to play the game of Mafia with **19 different roles** (citizen, doctor, sherif, mafioso, godfather, black mailer, vigilante, escort, serial killer, jester, consort, bodygaurd, investigator, consigliere, framer, survivor, mayor, jailor and bus driver) 
-* Ability to chat in game via public chat, privately or in special group chat.
-* Game follows traditional Night/Day cycle until mafia or town fail their objective.
-* Comprehensive ingame help with information on how to play the game and the different roles.
-* Post game screen shows who completed their objectives and allows players to talk to each other.
-* The ability for players who have closed their browsers or been disconnected, to rejoin their games while games are still running.
-* If for some reason the server goes down, when the server is restarted, all games are relaunched and players can rejoin them to continue thier games.
+## 特長
+##### 機能一覧
+* 新規プレイヤー向け説明を備えたフロントエンド Web サイト。ゲームクライアントのインストールは不要で、ブラウザだけで遊べます。
+* ユーザー登録、ログイン、フレンド追加、プライベートメッセージ機能。
+* ロビー作成・参加、ゲーム設定変更、プレゲームチャット。
+* 管理者がゲームのスキンやルール、テキスト、画像、役職を容易に変更できるモジュラー構造。
+* 市民、医者、シェリフ、マフィアなど **19 種類の役職** がプレイ可能。
+* 公開チャット、個人チャット、グループチャット。
+* マフィアまたはタウンが勝利条件を満たすまで昼夜のサイクルが続きます。
+* 役職説明や遊び方を備えた詳細なゲーム内ヘルプ。
+* 試合後の画面では達成目標やプレイヤー同士の会話が確認できます。
+* ブラウザを閉じたり接続が切断されても、再接続してゲームに復帰可能。
+* サーバーが落ちても再起動時にゲームが再開され、プレイヤーは戻って続行できます。
 
-##### Screenshots
+##### スクリーンショット
 
-## Server - setup
-##### Prerequisites
-* Linux or Windows
+## サーバーのセットアップ
+##### 必要条件
+* Linux または Windows
 * [NodeJS](http://nodejs.org/)
 * [Redis](http://redis.io/)
-* Optionally npm module [hiredis](https://www.npmjs.com/package/hiredis), this will significantly improve game server speed. Note on windows this will require you to make additional installations. If this is installed, PlayMafia will automatically use it.
+* 任意: npm モジュール [hiredis](https://www.npmjs.com/package/hiredis) — サーバー速度を大幅に向上させます。Windows では追加のインストールが必要です。インストールされていれば自動的に使用されます。
 
-##### Installation
-* Checkout this repo locally
-* In CMD, Navigate to "trunk\game\", run "npm install", this will install all required NodeJS Modules
-* Ensure redis is running
-* Simply run "node index.js" to run the server script, once this is running you should be ready to go!
+##### インストール
+* このリポジトリをローカルにチェックアウト
+* CMD で `trunk\\game\\` に移動し `npm install` を実行して必要な NodeJS モジュールをインストール
+* Redis を起動
+* `node index.js` を実行してサーバースクリプトを開始
 
-##### Configuration
-* For configuration options, see "[trunk\game\server\mafia.constants.js](https://github.com/Jezternz/PlayMafia/blob/master/trunk/game/server/mafia.constants.js)", the game server must be restarted to use changes to mafia.constants.js
+##### 設定
+* 設定オプションは `[trunk\\game\\server\\mafia.constants.js](https://github.com/Jezternz/PlayMafia/blob/master/trunk/game/server/mafia.constants.js)` を参照。変更後はサーバーを再起動してください。
 
-## Codebase & Notes for production
-##### Administrator Notes
-* If this is being run on a website, it needs to be run on HTTPS, otherwise some browsers will struggle to connect.
+## コードベースと本番運用に関するメモ
+##### 管理者向けメモ
+* ウェブサイトで運用する場合は HTTPS が必須です。HTTP のままだと一部ブラウザから接続できません。
 
-##### Technology
-* [NodeJS](http://nodejs.org/) - Serverside (Javascript) scripting language which PlayMafia is written in.
-* [Redis](http://redis.io/) - Redis is used like a database in PlayMafia, both for storing game state and also for passing around messages between clients.
-* [SockJS](https://github.com/sockjs/sockjs-node) - This enabled realtime messaging between the server and the clients (web browsers).
+##### 技術
+* [NodeJS](http://nodejs.org/) — サーバーサイドの JavaScript 実行環境。
+* [Redis](http://redis.io/) — ゲーム状態の保存やクライアント間のメッセージ伝達に使用。
+* [SockJS](https://github.com/sockjs/sockjs-node) — サーバーとブラウザ間のリアルタイム通信を実現。
 
-##### Game modifications
-The game was intentionally created to be modular, to enable ui skinning, additional roles etc.
-* The role stats can be easily tweaked (JSON format), and are located in "[trunk\game\server\mafia.config.raw.js](https://github.com/Jezternz/PlayMafia/blob/master/trunk/game/server/mafia.config.raw.js)".
-* The role name options can also be tweaked (JSON format), and are located in "[trunk\game\server\mafia.names.raw.js](https://github.com/Jezternz/PlayMafia/blob/master/trunk/game/server/mafia.names.raw.js)".
-* The role interaction and game logic for the action phase, is all located in "[trunk\game\server\mafia.gamelogic.js](https://github.com/Jezternz/PlayMafia/blob/master/trunk/game/server/mafia.gamelogic.js)".
+##### ゲームの改造
+ゲームはモジュール化されており、UI スキン追加や役職の拡張が容易です。
+* 役職ステータス (JSON) は `[trunk\\game\\server\\mafia.config.raw.js](https://github.com/Jezternz/PlayMafia/blob/master/trunk/game/server/mafia.config.raw.js)` にあります。
+* 役職名 (JSON) は `[trunk\\game\\server\\mafia.names.raw.js](https://github.com/Jezternz/PlayMafia/blob/master/trunk/game/server/mafia.names.raw.js)` にあります。
+* アクションフェーズのロジックは `[trunk\\game\\server\\mafia.gamelogic.js](https://github.com/Jezternz/PlayMafia/blob/master/trunk/game/server/mafia.gamelogic.js)` にあります。
 
-##### Area for improvements
-* Promises - The code should really be using promises to handle the Asynchrounous callbacks. I started writing this long before promises were commonplace in JS. This code suffers from serious callback hell unfortunately.
-* Error handling - So long as the redis connection is stable, things tend to work, however the code lacks propper error handling and failure callbacks, plenty of room of improvment for this.
-* Code could be improved by breaking it up into further files.
+##### 改善できる点
+* Promise を使った非同期処理への対応。
+* エラーハンドリングと失敗時のコールバック。
+* ファイル分割によるコードの整理。
 
-## Client
-* The game was written for google chrome, their are minor UI bugs with firefox and IE10+.
-* New players simply need to provide a username and password, register the first time, then login each additional time.
-* New users must enter a beta key to register, this can be configured in the configuration settings by an admin "BETA_REG_KEY".
-* An administrator can test the game with bots (they do not play the game, but enable you to see how it works), to do this you must change the configuration "PLAYMAFIA_DEBUG" to be true, bots can be added in the lobby by typing in the chat "+b" for a single bot for "+bb" for 10 bots.
+## クライアント
+* Google Chrome を想定。Firefox や IE10+ では軽微な UI バグがあります。
+* 初回のみユーザー名とパスワードを登録し、その後はログインするだけです。
+* 新規登録にはベータキーが必要です。設定の `BETA_REG_KEY` で変更できます。
+* 管理者は `PLAYMAFIA_DEBUG` を true にすることでボットを追加して動作確認できます。ロビーのチャットで `+b` (1 体) または `+bb` (10 体) と入力してください。
 
-## Debugging
-* The game extensively logs all activity. The amount of logging that is output to the console or to log files can be configured in the configuration file.
+## デバッグ
+* すべての動作を詳細にログ出力します。出力量は設定ファイルで調整できます。
 
-## Lisence
-MIT Lisence - Feel free to branch and create fixes or improvements, I am happy to bring improvements back into this repo.
+## ライセンス
+MIT License — 改良や修正のプルリクエストを歓迎します。
+

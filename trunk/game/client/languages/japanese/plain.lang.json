@@ -1,0 +1,368 @@
+{
+	"phasenames":[
+		"アクションフェーズ",
+		"アクション結果フェーズ",
+		"議論フェーズ",
+		"裁判フェーズ",
+		"弁議フェーズ",
+		"投票フェーズ",
+		"投票結果フェーズ",
+		"反省フェーズ"
+	],
+	"servermessages":{	
+		"slept_soundly":				"今夜はみんなよく眠れた...",
+		"slept_unsoundly1":				"夜の間に殺人が起きた！",
+		"slept_unsoundly3":				"夜の間に複数の殺人が起こり、都を生き残ったものはいなかった！",
+		"slept_unsoundly4+":				"夜なかじゅうにすさまじい喝声が聞こえてきた！",
+		
+		"life_murder_single":			"{p:#}が殺された！",
+		"life_murder_single_chat":		"{p:#}は夜の間に殺された！",
+		"life_murder_multiple":			"[{p:#}]が殺された！",
+		"life_murder_multiple_chat":	"{p:#}は夜の間に殺された！",
+		
+		"player_trial":					"{p:#}が裁判にかけられ、弁議を行うことになりました。",
+		"player_trial2":					"{p:#}が裁判にかけられた。",
+		"guilty_vote":					"市民は <span style=\"color:red;\"># 有罪と投票</span> 、<span style=\"color:green;\"># 無罪と投票</span> した。",
+		"found_guilty":					"{p:#}は有罪と判定され、処刑されることになった。",
+		"found_guilty2":				"{p:#}は有罪と判定され、処刑された。",
+		"found_innocent":				"{p:#}は無罪と判定され、命を救われた。",
+		"found_innocent2":				"{p:#}は無罪と判定された。",
+        
+        "mayor_reveal_chat":            "{p:#}が自分の権限を明かしました（{r:#}）",
+        
+        "inprisonment_target_chat":             "あなたは投獄され、夜の間は独房に閉じ込められます。",
+        "inprisonment_source_chat":             "{p:#}を無事に投獄しました。",
+        "inprisonment_source_chat_failed":      "{p:#}を投獄しようとしましたが失敗しました。すでに他の者に投獄されているか、あなた自身が先に投獄された可能性があります。",
+
+        "votes_required":               "裁判にかけるためには、多数決で#票が必要です。",
+        
+        "interrogate_suspect_chat":     "{p:#}は取調べの結果、疑わしい様子だった。",
+        "interrogate_legit_chat":       "{p:#}は取調べの結果、真っ当な者のように見えた。",
+        
+		"investigate_leader_chat":        "{p:#}は調査の結果、リーダーのように見え、{r:4}、{r:16}、{r:6}のいずれかの役職である可能性が高い。",
+		"investigate_leader_target_chat": "調査官があなたのメモを見つけ、あなたをリーダーと判断しました（{r:4}、{r:16}、{r:6}のいずれか）。",
+
+		"investigate_untrusting_chat":        "{p:#}は調査の結果、他人を信用しない様子があり、{r:0}、{r:11}、{r:14}のいずれかである可能性が高い。",
+		"investigate_untrusting_target_chat": "調査官があなたの作業小屋を見つけ、他人を信用しない様子を確認しました（{r:0}、{r:11}、{r:14}のいずれか）。",
+
+		"investigate_knives_chat":        "{p:#}は調査の結果、ナイフを収集しているように見え、{r:1}、{r:3}、{r:8}のいずれかの可能性が高い。",
+		"investigate_knives_target_chat": "調査官があなたのナイフのコレクションを発見しました（{r:1}、{r:3}、{r:8}のいずれか）。",
+
+		"investigate_knowledge_chat":        "{p:#}は調査の結果、他人に強い関心を示しており、{r:2}、{r:12}、{r:17}、{r:5}のいずれかである可能性が高い。",
+		"investigate_knowledge_target_chat": "調査官があなたが夜遅く帰宅するのを目撃しました（{r:2}、{r:12}、{r:17}、{r:5}のいずれか）。",
+
+		"investigate_busy_chat":        "{p:#}は調査の結果、朝に笑顔を見せており、{r:7}、{r:10}、{r:9}のいずれかの可能性が高い。",
+		"investigate_busy_target_chat": "調査官があなたの朝の笑顔を目撃しました（{r:7}、{r:10}、{r:9}のいずれか）。",
+
+		"investigate_reserved_chat":        "{p:#}は調査の結果、自分のことをあまり明かさず、{r:13}、{r:15}、{r:18}のいずれかである可能性が高い。",
+		"investigate_reserved_target_chat": "調査官があなたが他人と関わらず、自分の殻にこもっていることに気づきました（{r:13}、{r:15}、{r:18}のいずれか）。",
+
+        "player_silenced_chat":         "あなたは沈黙され、日が明けるまでチャットで発言できません。",   
+        
+        "player_blocked1_chat":         "あなたの夜の行動はエスコートによって阻まれた。",
+        "player_blocked2_chat":         "あなたの夜の行動はコンソートによって阻まれた。"        
+    },
+    "victorymessage_main":{
+        "none":"<span style=\"color:#6A87FA;\">市民</span> も <span style=\"color:#EB3232;\">マフィア</span> も敗北！",
+        "town":"<span style=\"color:#6A87FA;\">市民</span> の勝利！",
+        "mafia":"<span style=\"color:#EB3232;\">マフィア</span> の勝利！"
+    },
+    "victorymessage_sub":{
+        "sub_0":"",
+        "sub_1":"{0}は自分の目標を達成した。",
+        "sub_+":"{0}と{1}がそれぞれの目標を達成した。"
+    },
+    "anonymous_names":{
+        "0":"獄十",
+        "1":"囚人",
+        "2":"マフィア"
+    },
+    "groups":{
+        "-99":{
+            "displayname":"プレイヤー追加",
+            "color":"black",
+            "description":"ウィスパーを送るプレイヤーを選択します。"
+        },
+        "-2":{
+            "displayname":"墓場",
+            "color":"black",
+            "description":"墓場: 他の死亡者と会話できます。"
+        },
+        "-1":{
+            "displayname":"公開",
+            "color":"black",
+            "description":"チャット: 町の広場での公開会話。"
+        },
+        "0":{
+            "displayname":"マフィア",
+            "color":"red",
+            "description":"グループ: 限られた者しか聞けない秘密の会話。"
+        },
+        "1":{
+            "displayname":"牢獄",
+            "color":"blue",
+            "description":"グループ: 牢獄内でのみ聞ける会話。"
+        }
+    },
+    "rolecategories":{
+        "0":{
+            "name":"市民",
+            "title":"市民陣営の役職",
+            "description":"市民陣営の役職は互いの正体を知らずにゲームを開始します。多数の人数を武器にしてマフィアを見つけ出し、昼間に処刑することが目的です。",
+            "color":"#0051CA"
+        },
+        "1":{
+            "name":"マフィア",
+            "title":"マフィア陣営の役職",
+            "description":"マフィア陣営の役職はマフィア組織に所属しており、町を滅ぼし支配権を握ることが目的です。夜の間は会話ができ、通常は最初から互いの正体を知っています。",
+            "color":"#AD0000"
+        },
+        "2":{
+            "name":"中立",
+            "title":"中立役職",
+            "description":"中立役職は役職固有の目標を持ち、時には市民やマフィアと利害が一致する場合があります。",
+            "color":"purple"
+        }
+	},
+    "roles":{
+        "0":{
+            "displayid":"citizen",
+            "displayname":"市民",
+            "color":"#008080",
+            "description":"市民として、他の市民を見分けて協力し、残りのマフィアを排除しなければなりません。また、一晩だけ自分を守ることができます。",
+            "hints":["ヒントです！"]
+        },
+        "1":{
+            "displayid":"doctor",
+            "displayname":"医者",
+            "color":"#0000ff",
+            "description":"医者として、他の市民を見分けて協力し、残りのマフィアを排除しなければなりません。また、毎晩1人のプレイヤーを守ることができます。"
+        },
+        "2":{
+            "displayid":"sheriff",
+            "displayname":"保安官",
+            "color":"#008000",
+            "description":"保安官として、他の市民を見分けて協力し、残りのマフィアを排除しなければなりません。また、毎晩プレイヤーの陣営を尋問できます。"
+        },
+        "3":{
+            "displayid":"mafioso",
+            "displayname":"マフィアの手下",
+            "color":"#ff0000",
+            "description":"マフィアの手下として、マフィアの正体を隠しながら全ての市民を排除しなければなりません。夜に他のマフィアと秘密裏に会話ができます。"
+        },
+        "4":{
+            "displayid":"godfather",
+            "displayname":"ゴッドファーザー",
+            "color":"#ffa500",
+            "description":"ゴッドファーザーとして、マフィアの正体を隠しながら全ての市民を排除しなければなりません。夜に1人を標的にして攻撃を指示できます。"
+        },
+        "5":{
+            "displayid":"blackmailer",
+            "displayname":"脅迫者",
+            "color":"#480000",
+            "description":"脅迫者として、マフィアの正体を隠しながら全ての市民を排除しなければなりません。また、毎晩1人を沈黙させることができます。"
+        },
+        "6":{
+            "displayid":"vigilante",
+            "displayname":"自警団",
+            "color":"#000066",
+            "description":"自警団として、他の市民を見分けて協力し、残りのマフィアを排除しなければなりません。また、夜に1人を殺害することができます。"
+        },
+        "7":{
+            "displayid":"escort",
+            "displayname":"大酒飲み",
+            "color":"#660066",
+            "description":"大酒飲みとして、他の市民を見分けて協力し、残りのマフィアを排除しなければなりません。また、毎晩1人の行動を妨害することができます。"
+        },
+        "8":{
+            "displayid":"serialkiller",
+            "displayname":"連続殺人鬼",
+            "color":"#800080",
+            "description":"連続殺人鬼として、町とマフィアをすべて殺害することで勝利します。町とマフィアを均等に殺していき、最後まで生き残らなければなりません。毎晩1人を殺害できます。"
+        },
+        "9":{
+            "displayid":"jester",
+            "displayname":"ハングドマン（吊るされた男）",
+            "color":"#FF90A3",
+            "description":"ハングドマン（吊るされた男）として、日中に処刑されること（夜に殺されるのではなく）を目標に、欺きを使わなければなりません。"
+        },
+        "10":{
+            "displayid":"consort",
+            "displayname":"遊び人",
+            "color":"#df5050",
+            "description":"遊び人としてマフィアに協力し、マフィアの正体を隠しながら市民を全て排除します。また、毎晩1人の行動を妨害できます。"
+        },
+        "11":{
+            "displayid":"bodyguard",
+            "displayname":"ボディーガード",
+            "color":"#2d8642",
+            "description":"ボディーガードとして、他の市民を見分けて協力し、残りのマフィアを排除します。また、夜に1人を守ることができ、その人物が攻撃された場合、あなたと攻撃者が共に死亡します。"
+        },
+        "12":{
+            "displayid":"investigator",
+            "displayname":"調査官",
+            "color":"#589b16",
+            "description":"調査官として、他の市民を見分けて協力し、残りのマフィアを排除します。また、夜にプレイヤーを尾行し、その性格に関する手掛かりを得ます。"
+        },
+        "13":{
+            "displayid":"consigliere",
+            "displayname":"相談役",
+            "color":"#c63574",
+            "description":"相談役としてマフィアに協力し、マフィアの正体を隠しながら市民を全て排除します。また、プレイヤーの正体に関する手掛かりを得られます。"
+        },
+        "14":{
+            "displayid":"framer",
+            "displayname":"工作員",
+            "color":"#b48000",
+            "description":"工作員としてマフィアに協力し、マフィアの正体を隠しながら市民を全て排除します。また、夜にプレイヤーを陥れ、調査官や保安官を混乱させます。"
+        },
+        "15":{
+            "displayid":"survivor",
+            "displayname":"生存者",
+            "color":"#d6d600",
+            "description":"生存者として、誰が目標を達成しても関係なく、ゲーム終了まで生き残らなければなりません。"
+        },
+        "16":{
+            "displayid":"mayor",
+            "displayname":"市長",
+            "color":"#4a86e8",
+            "description":"市長として、他の市民を見分けて協力し、残りのマフィアを排除しなければなりません。また、議論フェーズで身分を公開し、裁判フェーズで追加の投票権を得ることができます。"
+        },
+        "17":{
+            "displayid":"jailor",
+            "displayname":"看守",
+            "color":"#76a5af",
+            "description":"看守として、他の市民を見分けて協力し、残りのマフィアを排除しなければなりません。また、反省フェーズでプレイヤーを投獄することができ、その日誰も処刑されなかった場合に成功します。夜はその人物と会話でき、処刑を選択することも可能です。"
+        },
+        "18":{
+            "displayid":"busdriver",
+            "displayname":"ハッカー",
+            "color":"#6fa8dc",
+            "description":"ハッカーとして、他の市民を見分けて協力し、残りのマフィアを排除しなければなりません。また、夜に2人のプレイヤーを入れ替え、対象となる行動を互いに入れ替えることができます。"
+        }
+    },
+    "randomroles":{
+        "0":{
+            "displayid":"randomtown",
+            "displayname":"ランダム市民",
+            "color":"blue"
+        },
+        "1":{
+            "displayid":"randommafia",
+            "displayname":"ランダムマフィア",
+            "color":"red"
+        },
+        "2":{
+            "displayid":"randomneutral",
+            "displayname":"ランダム中立",
+            "color":"purple"
+        },
+        "3":{
+            "displayid":"randomtowncore",
+            "displayname":"ランダム市民コア",
+            "color":"blue"
+        },
+        "4":{
+            "displayid":"randomtowninvestigative",
+            "displayname":"ランダム市民（調査役）",
+            "color":"blue"
+        },
+        "5":{
+            "displayid":"randomtownpower",
+            "displayname":"ランダム市民（特殊能力）",
+            "color":"blue"
+        },
+        "6":{
+            "displayid":"randommafiacore",
+            "displayname":"ランダムマフィアコア",
+            "color":"red"
+        }
+    },
+    "roleactions":{
+        "0":{
+            "displayname":"防御",
+            "description":"夜に鎧を着て自分を守ります。"
+        },
+        "1":{
+            "displayname":"治療",
+            "description":"夜にプレイヤーを見守り、1回の攻撃を防ぎます。"
+        },
+        "2":{
+            "displayname":"尋問",
+            "description":"夜にプレイヤーを尋問します。"
+        },
+        "3":{
+            "displayname":"排除",
+            "description":"プレイヤーに攻撃を指示し、そのプレイヤーを排除します。"
+        },
+        "4":{
+            "displayname":"沈黙",
+            "description":"プレイヤーを脅迫し、昼間に発言できなくします。"
+        },
+        "5":{
+            "displayname":"戒厳令",
+            "description":"3日目以降、法を自ら執行し、任意のプレイヤーを殺害します。"
+        },
+        "6":{
+            "displayname":"誘惑",
+            "description":"夜にプレイヤーを誘惑し、その行動をすべて妨害します。"
+        },
+        "7":{
+            "displayname":"殺害",
+            "description":"2日目以降、油断しているプレイヤーを殺害します。"
+        },
+        "8":{
+            "displayname":"娯楽",
+            "description":"夜にプレイヤーを楽しませ、その夜の行動をすべて妨害します。"
+        },
+        "9":{
+            "displayname":"護衛",
+            "description":"プレイヤーを護衛し、攻撃を受けた場合は護衛と攻撃者が死亡し、護衛対象は生き残ります。"
+        },
+        "10":{
+            "displayname":"尾行",
+            "description":"夜にプレイヤーを尾行し、その性格に関する手掛かりを得ます。"
+        },
+        "11":{
+            "displayname":"調査",
+            "description":"夜にプレイヤーを調査し、その性格に関する手掛かりを得ます。"
+        },
+        "12":{
+            "displayname":"濡れ衣",
+            "description":"プレイヤーに濡れ衣を着せ、調査でより疑わしく見せます。"
+        },
+        "13":{
+            "displayname":"公開",
+            "description":"市長として正体を全プレイヤーに明かし、裁判フェーズで追加の投票権を得ます。"
+        },
+        "14":{
+            "displayname":"投獄",
+            "description":"夜にプレイヤーを投獄し、あなた以外とは会話できなくします。"
+        },
+        "15":{
+            "displayname":"処刑",
+            "description":"以前に投獄したプレイヤーを処刑します。"
+        },
+        "16":{
+            "displayname":"入れ替え",
+            "description":"2人の対象を入れ替え、それぞれに向けられた行動を互いに転送します。"
+        }
+    },
+    "goalobjectives":{
+        "0":[
+            "町を生かしつつ、残りのマフィアを全て排除する。"
+        ],
+        "1":[
+            "マフィアを生かしつつ、残りの町を全て排除する。"
+        ],
+        "2":[
+            "自分が生き残りながら、町とマフィアを全員殺す。"
+        ],
+        "3":[
+            "昼間に町の投票で処刑される。"
+        ],
+        "4":[
+            "ゲーム終了まで生き残る。"
+        ]
+    }
+}

@@ -82,7 +82,7 @@ function MafWebPage()
 function GameInfoManager()
 {
     var
-        websiteLanguage = "english",
+        websiteLanguage = "japanese",
         websiteSubLanguage = "plain";
         
     var

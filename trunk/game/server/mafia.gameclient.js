@@ -11,7 +11,8 @@ var GameClient = function(){
 		pSCFactory = false;
         
     var 
-        name_legalityTest = (/^[A-Za-z\d _]*?$/gim),
+        //name_legalityTest = (/^[A-Za-z\d _]*?$/gim),
+		name_legalityTest = /^(?!.*[<>\/\\{}\[\]"';])[^\x00-\x1F]+$/;
         name_illegalitySpacesTest = (/^ | $|  /gim);
 
 	var constructor = function(tmaf){
@@ -821,7 +822,7 @@ var GameClient = function(){
                 var errors=[];			
                 
                 // Valid username length
-                if(data.register_username.length < 4 || data.register_username.length > 16){
+                if(data.register_username.length < 1 || data.register_username.length > 16){
                     errors.push({'code':3,'context':'register','fields':['register_username']});
                 }
                 // Valid characters in username
@@ -1560,7 +1561,7 @@ var GameClient = function(){
 			var playerid = session.playerid;
 			var gameid = session.currentgameid;
 			var newPlayerName = data.pre_name;
-			if((!newPlayerName) || (newPlayerName.length < 3) || (newPlayerName.length > 16) || (!newPlayerName.match(name_legalityTest)) || (newPlayerName.match(name_illegalitySpacesTest))){
+			if((!newPlayerName) || (newPlayerName.length < 1) || (newPlayerName.length > 16) || (!newPlayerName.match(name_legalityTest)) || (newPlayerName.match(name_illegalitySpacesTest))){
 				send({type:'game.changename_callback',data:{error:1}});
 				return;
 			}

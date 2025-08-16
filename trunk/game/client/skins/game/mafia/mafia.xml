@@ -40,8 +40,8 @@
 			<div id="game_leftcol" class="animated">
 				<div id="game_left_topbox">
 					<div id="game_graveyard" class="standardgamebox">
-						<div id="game_graveyard_title" class="graveyard_title">Graveyard</div>
-						<div id="game_roles_title" class="graveyard_title">Roles</div>
+						<div id="game_graveyard_title" class="graveyard_title">墓地</div>
+						<div id="game_roles_title" class="graveyard_title">役割</div>
 						<div id="game_graveyard_content" class="graveyard_content"></div>
 						<div id="game_roles_content" class="graveyard_content"></div>
 					</div>
@@ -65,18 +65,18 @@
 				<div id="game_mid_mid">
 					<div id="game_mid_bottombox_midattach">
 						<div id="game_lynch">
-							<span id="game_lynch_name">Do you find this person Guilty?</span><br /><br />
+							<span id="game_lynch_name">この人物を有罪だと思いますか？</span><br /><br />
 							<div id="game_lynch_options">
                                 <span class="lynch_option" id="lynch_option_1">
-                                    <span class="label">Innocent</span>
+                                    <span class="label">無罪</span>
                                     <input type="checkbox" data-vote-value="-1" class="mafinput" />
                                 </span>
                                 <span class="lynch_option" id="lynch_option_2">
-                                    <span class="label">No Vote</span>
+                                    <span class="label">無投票</span>
                                     <input type="checkbox" data-vote-value="0" class="mafinput" id="game_lynch_novote" />
                                 </span>
                                 <span class="lynch_option" id="lynch_option_3">
-                                    <span class="label">Guilty</span>
+                                    <span class="label">有罪</span>
                                     <input type="checkbox" data-vote-value="1" class="mafinput" />
                                 </span>
                             </div>
@@ -114,7 +114,7 @@
 						</div>
 						<div id="game_chat" class="standardgamebox">
 							<div id="game_chat_title_container">
-								<div id="game_chat_title">Whisper: Jezternz</div>
+								<div id="game_chat_title">ささやき: Jezternz</div>
 								<div id="game_chat_close">
 									<input type="button" value="X" id="button_game_close_chat" />
 								</div>
@@ -158,9 +158,9 @@
 		<div class="center_box_x center_box_y">
 			<div id="post_box_container">
 				<div id="post_box_top" class="animated">
-					<div id="post_victory" class="animated hidden">Victory Message</div>
-					<div id="post_sub_victory" class="animated hidden">Sub Victory Message</div>
-					<div id="post_names_victory" class="animated hidden">Names</div>
+					<div id="post_victory" class="animated hidden">勝利のメッセージ</div>
+					<div id="post_sub_victory" class="animated hidden">サブ勝利メッセージ</div>
+					<div id="post_names_victory" class="animated hidden">名前</div>
 					<div id="post_scoreboard">_</div>
 				</div>
 				<div id="post_box_bottom" class="animated">

@@ -1,22 +1,17 @@
 [
     {
         "id":"default",
-        "displayname":"Default Names",
-        "names":["Joe Barboza", "James J. Bulger", "Arthur Doe Jr", "Jimmy Flynn", "Stephen Flemmi", "Donald Killeen", "Bernard McLaughlin", "James McLean", "Johnny Martorano", "Paul McGonagle", "Patrick Nee", "James O Toole", "Alex Rocco", "Frank Salemme"]
+        "displayname":"default",
+        "names":["アンソニー", "エヴァン", "ホリー", "キャスリン", "ジェームズ", "タイソン", "キャム", "クリス", "アイザック", "トレメイン", "リス", "アメリア", "ウォルター"]
     },
     {
-        "id":"peeps",
-        "displayname":"People",
-        "names":["Anthony", "Evan", "Holly", "Cathryn", "James", "Tyson", "Cam", "Chris", "Isaac", "Tremaine", "Liss", "Amelia", "Walter"]
+        "id":"sei",
+        "displayname":"姓",
+        "names":["田中", "鈴木", "佐藤", "川村", "石田", "中村", "藤本", "太田", "宮崎", "竹内", "斎藤", "林", "井上", "近藤"]
     },
     {
-        "id":"bsg",
-        "displayname":"Battlestar Galactica",
-        "names":["William Adama", "Laura Roslin", "Starbuck", "Apollo", "Gaius Baltar", "Number Six", "Boomer", "Saul Tigh", "Karl Agathon", "Galen Tyrol", "Felix Gaeta", "Samuel Anders", "Cally Tyrol", "Billy Keikeya"]
-    },
-    {
-        "id":"matrix",
-        "displayname":"The Matrix",
-        "names":["Neo", "Morpheus", "Trinity", "Agent Smith", "Oracle", "Cypher", "Tank", "Apoc", "Mouse", "Switch", "Dozer", "Agent Brown", "Agent Jones"]
+        "id":"mei",
+        "displayname":"名",
+        "names":["アキラ", "ユウコ", "タカシ", "ミホ", "シンジ", "マリコ", "ケンタ", "アヤ", "リョウ", "ハルカ", "タツヤ", "ナオミ", "ユキ"]
     }
 ]

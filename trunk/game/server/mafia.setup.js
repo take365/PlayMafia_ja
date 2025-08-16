@@ -24,7 +24,7 @@ var Setup = new function(){
         }
         catch (er)
         {
-            console.error("\n\nFailed to write out file '{0}' error '{1}'.\n\n".replace("{0}", filename).replace("{1}", er));
+            console.error("\n\nファイルの書き出しに失敗 '{0}' error '{1}'.\n\n".replace("{0}", filename).replace("{1}", er));
         }
         callback.call();
     }
@@ -38,27 +38,27 @@ var Setup = new function(){
 		
 		this.globals.userSettingSetupStructure = {
 			'groups':[
-				{'id':'misc','display':'Miscellaneous'},
-				{'id':'skins','display':'Skins'},
-				{'id':'ui','display':'Game Interface'}
+				{'id':'misc','display':'その他'},
+				{'id':'skins','display':'外観'},
+				{'id':'ui','display':'インターフェース'}
 			],
 			'settings':[
-				{'id':'csetting_game_volume', 'type':'number', 'details':'Game Volume', 'group':'misc', 'defaultvalue':'50'},
-				{'id':'csetting_language', 'type':'dropdown', 'details':'Language', 'group':'misc', 'selection':langSkinList, 'defaultvalue':'english'},                
-				{'id':'csetting_menu_skin', 'type':'dropdown', 'details':'Menu skin', 'group':'skins', 'selection':menuSkinList, 'triggerReload':true,
-					'warning':"Setting 'Menu Skin' will trigger your game to be reloaded."},
-				{'id':'csetting_menu_skin_custom', 'details':'Menu custom skin URL', 'group':'skins', 'triggerReload':true,
-					'warning':"Setting 'Menu Custom Skin URL' will surrender browser control to a foreign vendor, and is only recommended for advanced users or developers. This will also trigger your game to be reloaded."},
-				{'id':'csetting_game_skin', 'type':'dropdown', 'details':'Game skin', 'group':'skins', 'selection':gameSkinList,
-					'warning':"Setting 'Game Skin' will override joined game server settings."},
-				{'id':'csetting_game_skin_custom', 'details':'Game custom skin URL', 'group':'skins',
-					'warning':"Setting 'Game Custom Skin URL' setting will surrender browser control to a foreign vendor, and is only recommended for advanced users or developers.This will also override joined game server settings."},                    
-				{'id':'csetting_game_animation', 'type':'dropdown', 'details':'CSS animation', 'group':'ui', 'defaultvalue':'on', 'selection':binarySwitchList},
-				{'id':'csetting_game_fontsize', 'details':'Game chat font size', 'group':'ui', 'defaultvalue':'14px'},
-				{'id':'csetting_game_chat_x', 'type':'number', 'details':'Chat box position', 'group':'ui', 'defaultvalue':'0'},
-				{'id':'csetting_game_players_x', 'type':'number', 'details':'Playerlist box position', 'group':'ui', 'defaultvalue':'0'},
-				{'id':'csetting_game_help_pos', 'type':'string', 'details':'Help box position', 'group':'ui', 'defaultvalue':'0,0'},
-				{'id':'csetting_game_help_size', 'type':'string', 'details':'Help box size', 'group':'ui', 'defaultvalue':'500,600'}
+				{'id':'csetting_game_volume', 'type':'number', 'details':'ゲーム音量', 'group':'misc', 'defaultvalue':'50'},
+				{'id':'csetting_language', 'type':'dropdown', 'details':'言語', 'group':'misc', 'selection':langSkinList, 'defaultvalue':'english'},                
+				{'id':'csetting_menu_skin', 'type':'dropdown', 'details':'メニュー装飾', 'group':'skins', 'selection':menuSkinList, 'triggerReload':true,
+					'warning':"「メニュー装飾」を変更すると、ゲームが再読み込みされます。"},
+				{'id':'csetting_menu_skin_custom', 'details':'カスタムメニュー装飾URL', 'group':'skins', 'triggerReload':true,
+					'warning':"「カスタムメニュー装飾URL」を設定すると、ブラウザ制御が外部ベンダーに委ねられます。これは上級ユーザーまたは開発者にのみ推奨されます。また、ゲームが再読み込みされます。"},
+				{'id':'csetting_game_skin', 'type':'dropdown', 'details':'ゲーム装飾', 'group':'skins', 'selection':gameSkinList,
+					'warning':"「ゲーム装飾」を変更すると、参加しているゲームサーバーの設定を上書きします。"},
+				{'id':'csetting_game_skin_custom', 'details':'カスタムゲーム装飾URL', 'group':'skins',
+					'warning':"「カスタムゲーム装飾URL」を設定すると、ブラウザ制御が外部ベンダーに委ねられます。これは上級ユーザーまたは開発者にのみ推奨されます。また、参加しているゲームサーバーの設定を上書きします。"},                    
+				{'id':'csetting_game_animation', 'type':'dropdown', 'details':'CSSアニメーション', 'group':'ui', 'defaultvalue':'on', 'selection':binarySwitchList},
+				{'id':'csetting_game_fontsize', 'details':'チャット文字サイズ', 'group':'ui', 'defaultvalue':'14px'},
+				{'id':'csetting_game_chat_x', 'type':'number', 'details':'チャットボックス位置', 'group':'ui', 'defaultvalue':'0'},
+				{'id':'csetting_game_players_x', 'type':'number', 'details':'プレイヤーリスト位置', 'group':'ui', 'defaultvalue':'0'},
+				{'id':'csetting_game_help_pos', 'type':'string', 'details':'ヘルプボックス位置', 'group':'ui', 'defaultvalue':'0,0'},
+				{'id':'csetting_game_help_size', 'type':'string', 'details':'ヘルプボックスサイズ', 'group':'ui', 'defaultvalue':'500,600'}
 			]
 		};
 		var userSettingKeys = [];
@@ -91,31 +91,31 @@ var Setup = new function(){
 			// Settings            
             // DEFAULTS are setup in gameclient.
 			'settings':[
-				{'id':'ssetting_gamename', 'display':'Game name', 'type':'text' },
-				{'id':'ssetting_roleselection', 'display':'Role selection', 'type':'list', 'frontdisplay':true, 'options':roleSelectionOptions },
-				{'id':'ssetting_maxplayers', 'display':'Maximum players', 'type':'number', 'frontdisplay':true },
+				{'id':'ssetting_gamename', 'display':'ゲーム名', 'type':'text' },
+				{'id':'ssetting_roleselection', 'display':'役割選択', 'type':'list', 'frontdisplay':true, 'options':roleSelectionOptions },
+				{'id':'ssetting_maxplayers', 'display':'最大人数', 'type':'number', 'frontdisplay':true },
 				{'id':'ssetting_gameskin', 'display':'Game skin', 'type':'dropdown', 'frontdisplay':true, 'options':gameSkinOptions },
-				{'id':'ssetting_phasetimes', 'display':'Phase time limits', 'type':'tree',
+				{'id':'ssetting_phasetimes', 'display':'フェーズの時間制限', 'type':'tree',
 					'values':phaseTimeValues,
 					'schema':[
-						{'id':'0','display':'Commit Actions Phase (Night)'},
-						{'id':'1','display':'Resolve Actions Phase (Night)'},
-						{'id':'2','display':'Discussion Phase (Day)'},
-						{'id':'3','display':'Trial Phase (Day)'},
-						{'id':'4','display':'Defence Phase (Day)'},
-						{'id':'5','display':'Lynch Phase (Day)'},
-						{'id':'6','display':'Lynch Resolve Phase (Day)'},
-						{'id':'7','display':'Reflection Phase (Day)'}
+						{'id':'0','display':'アクションフェーズ（夜）'},
+						{'id':'1','display':'アクション結果フェーズ（夜）'},
+						{'id':'2','display':'議論フェーズ（昼）'},
+						{'id':'3','display':'裁判フェーズ（昼）'},
+						{'id':'4','display':'弁護フェーズ（昼）'},
+						{'id':'5','display':'投票フェーズ（昼）'},
+						{'id':'6','display':'投票結果フェーズ（昼）'},
+						{'id':'7','display':'黄昏フェーズ（昼）'}
 					]
 				},
-				{'id':'ssetting_namingtheme', 'display':'Naming theme', 'type':'dropdown', 'frontdisplay':true, 'options':namingThemeOptions },
-				{'id':'ssetting_pretime', 'display':'Name choice time limit', 'type':'text' },
-				{'id':'ssetting_graveyardroles', 'display':'Show dead players roles', 'type':'dropdown', 'frontdisplay':true, 
-                    'options':[
-                        {'display':'Showing','value':'true'},
-                        {'display':'Hidden','value':'false'}
-                    ]
-                }
+				{'id':'ssetting_namingtheme', 'display':'ネーミングテーマ', 'type':'dropdown', 'frontdisplay':true, 'options':namingThemeOptions },
+				{'id':'ssetting_pretime', 'display':'名前選択の制限時間', 'type':'text' },
+				{'id':'ssetting_graveyardroles', 'display':'死亡プレイヤーの役職表示', 'type':'dropdown', 'frontdisplay':true, 
+					'options':[
+						{'display':'表示する','value':'true'},
+						{'display':'非表示','value':'false'}
+					]
+				}
 			],
 			// Setting validation (apart from automatic list, dropdown etc)
 			'setting_validators':{
@@ -246,7 +246,7 @@ var Setup = new function(){
         }
         catch (er)
         {
-            console.error("\n\nFailed to read in file '{0}' error '{1}'.\n\n".replace("{0}", filename).replace("{1}", er));
+            console.error("\n\nファイルの読み込みに失敗しました '{0}' error '{1}'.\n\n".replace("{0}", filename).replace("{1}", er));
         }
 		var tokenizer = /"|(\/\*)|(\*\/)|(\/\/)|\n|\r/g,
 			in_string = false,
@@ -298,7 +298,7 @@ var Setup = new function(){
         }
         catch(er)
         {
-            console.error("\n\nFailed to parse JSON in file '{0}' error '{1}'.\n\n".replace("{0}", filename).replace("{1}", er));
+            console.error("\n\nファイル内のJSONの解析に失敗しました。 '{0}' error '{1}'.\n\n".replace("{0}", filename).replace("{1}", er));
         }        
 		return jsonObj;
 	}

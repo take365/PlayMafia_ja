@@ -4,7 +4,7 @@ var CONSTANTS = {
 	PLAYMAFIA_DEBUG_CONSTANTS_OVERRIDE: false,
 	
 	// Debug on or off
-	PLAYMAFIA_DEBUG : false,
+	PLAYMAFIA_DEBUG : true,
 	
 	// Redis setup normal	
 	REDIS_URL : process.env.NODE_ENV != 'production' ? false : "<FULL_PRODUCTION_REDIS_URL_GOES_HERE>",

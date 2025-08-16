@@ -13,21 +13,21 @@ $(function(){
             gameConfigUri = "/json/game.config.json";
         
         // Login & reg errors
-        var errorDictionary = {
-            'login':{
-                '1':'Username or Password wrong.',
-                '2':'User already logged in, try again in 5 seconds if you think it may have just been a bad Disconnect.'
-            },
-            'register':{
-                '1':'Invalid beta registration string.',
-                '2':'Username contains invalid characters (non alphanumeric).',
-                '3':'Username must be between 4 and 16 characters in length.',
-                '4':'Password and repeat password do not match.',
-                '5':'Password must be between 6 and 16 characters in length.',  
-                '6':'Username is already in use.',  
-                '7':'Username may not have spaces at the start, end or multiple in a row.'
-            }
-        };
+		var errorDictionary = {
+			'login':{
+				'1':'ユーザー名またはパスワードが間違っています。',
+				'2':'このユーザーはすでにログイン中です。切断の不具合と思われる場合は、5秒後にもう一度お試しください。'
+			},
+			'register':{
+				'1':'無効なベータ登録コードです。',
+				'2':'ユーザー名に不正な文字が含まれています。',
+				'3':'ユーザー名は2文字以上16文字以下で入力してください。',
+				'4':'パスワードと再入力パスワードが一致しません。',
+				'5':'パスワードは2文字以上16文字以下で入力してください。',
+				'6':'このユーザー名はすでに使用されています。',
+				'7':'ユーザー名の先頭や末尾にスペースは使えず、連続したスペースも使用できません。'
+			}
+		};
 		
 		// Privates
 		var 

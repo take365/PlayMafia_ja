@@ -81,9 +81,9 @@ var Setup = new function(){
             .map(function(ntheme){return {'display':ntheme.displayname,'value':ntheme.id};});
         roleSelectionOptions =  Array.prototype.concat.apply([], [
             this.globals.gameConfig.randomroles
-                .map(function(role){return {'display':role.displayid,'value':'rand_'+role.randomroleid};}),
+                .map(function(role){return {'display':role.displayname,'value':'rand_'+role.randomroleid};}),
             this.globals.gameConfig.roles
-                .map(function(role){return {'display':role.displayid,'value':'role_'+role.roleid};})
+                .map(function(role){return {'display':role.displayname,'value':'role_'+role.roleid};})
         ]);
             
 		this.constants.MAFIA_PHASE_TIMES_DEFAULTS.forEach(function(phasetime, i){phaseTimeValues[i] = phasetime;});		

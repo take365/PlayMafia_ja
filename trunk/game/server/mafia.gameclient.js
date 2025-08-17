@@ -1260,17 +1260,19 @@ var GameClient = function(){
 												'uniqueid': -1,
 												'playername': 'Player '+new_player_id,
 												'connected':0,
-												'role': -1,
-												'startingrole': -1,
-												'playerstate': -1,
-												'actionsremaining': -1
-											})
-										.publish('maf.serverupdates.1', JSON.stringify({
-											'subType':'listing_update',
-											'message':[{'updateType':'UPDATE', 'gameid':gameid, 'playercount':newPlayerCount}]
-										}))
-										.exec(function(){
-											db.multi()
+                                                                                                'role': -1,
+                                                                                                'startingrole': -1,
+                                                                                                'playerstate': -1,
+                                                                                                'actionsremaining': -1,
+                                                                                                'is_bot':1
+                                                                                        })
+                                                                                .sadd('maf:games:'+gameid+':botlist', new_player_id)
+                                                                                .publish('maf.serverupdates.1', JSON.stringify({
+                                                                                        'subType':'listing_update',
+                                                                                        'message':[{'updateType':'UPDATE', 'gameid':gameid, 'playercount':newPlayerCount}]
+                                                                                }))
+                                                                                .exec(function(){
+                                                                                        db.multi()
 												.publish('maf.games.'+gameid, JSON.stringify({
 													'subType':'lobby',
 													'message':{player_updates:[{updateType:'ADD', userid:userid, username: username, ishost:0, isready:1}]}

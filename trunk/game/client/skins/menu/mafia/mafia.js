@@ -542,26 +542,7 @@ new function(){
 					};
 					if(typeof gs.value != 'undefined')temp['value'] = gs.value;
 					if(typeof gs.values != 'undefined')temp['values'] = gs.values;
-					//if(typeof gs.options != 'undefined')temp['options'] = gs.options;
-					if(typeof gs.options != 'undefined'){  
-						if(gs.id == 'ssetting_roleselection'){  
-							// 役割選択の場合は表示名に変換  
-							temp['options'] = gs.options.map(function(opt){  
-								if(opt.value.indexOf('role_') != -1){  
-									var roleid = +opt.value.replace('role_', '');  
-									return {'display': lang('roles.'+roleid+'.displayname'), 'value': opt.value};  
-								} else if(opt.value.indexOf('rand_') != -1){  
-									var roleid = +opt.value.replace('rand_', '');  
-									return {'display': lang('randomroles.'+roleid+'.displayname'), 'value': opt.value};  
-								}  
-								return opt;  
-							});  
-						} else {  
-							temp['options'] = gs.options;  
-						}  
-					}
-
-
+					if(typeof gs.options != 'undefined')temp['options'] = gs.options;
 					if(typeof gs.schema != 'undefined')temp['schema'] = gs.schema;
 					settingsStructure.groups[0].inputs.push( temp );
 				});

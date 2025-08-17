@@ -1,8 +1,9 @@
 var GameServer = function(){
-	var 
-		_this = this,
-		maf = false,
-		db = false;
+        var
+                _this = this,
+                maf = false,
+                db = false,
+                llmBot = require('./llm.bot');
 	
 	// Private methods
 	var constructor = function(tmaf){
@@ -1075,16 +1076,16 @@ var GameServer = function(){
             ensureEntered(tpm.receiver, 'message_updates', tpm);
         });
 
-	    getNextPhaseActions(gameid, message['day'], message['dayphase'], function (pactions)
-	    {
+            getNextPhaseActions(gameid, message['day'], message['dayphase'], function (pactions)
+            {
 
-	        Object.keys(pactions).forEach(function (uid)
-	        {
-	            ensureEntered(uid, 'action_enable_updates', pactions[uid]);
+                Object.keys(pactions).forEach(function (uid)
+                {
+                    ensureEntered(uid, 'action_enable_updates', pactions[uid]);
             });
-
-	        getPrivateGroupChats(gameid, message['day'], message['dayphase'], function (pgchats)
-	        {
+                runLLMBots(gameid, message['day'], message['dayphase'], pactions);
+                getPrivateGroupChats(gameid, message['day'], message['dayphase'], function (pgchats)
+                {
 
 	            Object.keys(pgchats).forEach(function (uid)
 	            {
@@ -1353,7 +1354,75 @@ var GameServer = function(){
                 });
             });
     }
-	var buildGameLogicObj = function(gameid, callback){
+    var runLLMBots = function(gameid, day, phase, pactions){
+        db.smembers('maf:games:'+gameid+':botlist', function(err, botPlayerIds){
+            if(err || !botPlayerIds || botPlayerIds.length===0) return;
+            db.smembers('maf:games:'+gameid+':playerlist', function(err, allPlayerIds){
+                var multi = db.multi();
+                allPlayerIds.forEach(function(plid){
+                    multi.hmget('maf:games:'+gameid+':players:'+plid, ['uniqueid','playerstate']);
+                });
+                multi.exec(function(err, info){
+                    if(err) return;
+                    var aliveUniqueIds = [];
+                    var bots = [];
+                    info.forEach(function(pl, i){
+                        var uid = parseInt(pl[0]);
+                        var alive = parseInt(pl[1])===1;
+                        if(alive) aliveUniqueIds.push(uid);
+                        if(botPlayerIds.indexOf(allPlayerIds[i])!==-1){
+                            bots.push({playerid: allPlayerIds[i], uniqueid: uid, alive: alive});
+                        }
+                    });
+                    bots.forEach(function(b){
+                        if(!b.alive) return;
+                        if(phase==0){
+                            var actions = pactions[b.uniqueid] || [];
+                            if(actions.length===0) return;
+                            llmBot.decideNightAction({day:day, phase:phase}, actions).then(function(choice){
+                                var act = choice.action || actions[0];
+                                var t1 = typeof choice.target1==='number'?choice.target1:-1;
+                                var t2 = typeof choice.target2==='number'?choice.target2:-1;
+                                db.multi()
+                                    .hmset('maf:games:'+gameid+':actions:'+day+':'+phase+':'+b.uniqueid, {
+                                        'actiontype':act.actionid,
+                                        'initiator_uniqueid':b.uniqueid,
+                                        'target1':t1,
+                                        'target2':t2,
+                                        'day':day,
+                                        'dayphase':phase
+                                    })
+                                    .sadd('maf:games:'+gameid+':actions:'+day+':'+phase, 'actions:'+day+':'+phase+':'+b.uniqueid)
+                                    .exec(function(){
+                                        db.publish('maf.games.'+gameid, JSON.stringify({'subType':'game_actioncount_change','message':{'uniqueid':b.uniqueid,'actiontype':act.actionid,'target1':t1,'target2':t2}}));
+                                    });
+                            });
+                        } else if(phase==2){
+                            llmBot.generateChat({day:day, phase:phase}, []).then(function(msg){
+                                if(!msg) return;
+                                db.publish('maf.games.'+gameid, JSON.stringify({'subType':'game_chat','message':{'chat_updates':[{'origin':b.uniqueid,'destination':'g-1','message':msg}]}}));
+                            });
+                        } else if(phase==3){
+                            var candidates = aliveUniqueIds.filter(function(uid){return uid!==b.uniqueid;});
+                            if(candidates.length===0) return;
+                            llmBot.decideVote({day:day, phase:phase}, candidates).then(function(victim){
+                                victim = victim || candidates[0];
+                                db.multi()
+                                    .hget('maf:games:'+gameid+':votes:'+day+':3:'+b.uniqueid, 'receiver_uniqueid')
+                                    .hmset('maf:games:'+gameid+':votes:'+day+':3:'+b.uniqueid, {'receiver_uniqueid':victim,'vote_value':1})
+                                    .sadd('maf:games:'+gameid+':votes:'+day+':3', 'votes:'+day+':3:'+b.uniqueid)
+                                    .exec(function(err, repliesb){
+                                        var oldid = repliesb && repliesb[0]!=null?parseInt(repliesb[0]):false;
+                                        db.publish('maf.games.'+gameid, JSON.stringify({'subType':'game_vote','message':{'oldvictimid':oldid,'victimid':victim,'voteval':1,'voterid':b.uniqueid}}));
+                                    });
+                            });
+                        }
+                    });
+                });
+            });
+        });
+    }
+        var buildGameLogicObj = function(gameid, callback){
 		var stateObj = {gameid:gameid};
 		db.hmget('maf:games:'+gameid, ['playercount', 'day', 'dayphase'], function(err, gamestate){
 			stateObj.playerCount = +gamestate[0];

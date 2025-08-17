@@ -1,0 +1,29 @@
+{
+  "name": "playmafia",
+  "subdomain": "playmafia",
+  "main": "index.js",
+  "version": "0.0.1",
+  "engines": {
+    "node": "0.8.15"
+  },
+  "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "dotenv": "^17.2.1",
+    "entities": "0.3.0",
+    "express": "3.1.0",
+    "node-fetch": "^2.7.0",
+    "redis": "^3.1.2",
+    "rpsc": "0.0.2",
+    "sockjs": "0.3.7"
+  },
+  "optionalDependencies": {
+    "hiredis": "0.1.14"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

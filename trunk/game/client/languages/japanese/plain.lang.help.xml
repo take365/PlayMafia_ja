@@ -1,0 +1,101 @@
+<div data-mstart="1" data-mhelpid="home" data-mhelpdisplay="Home">
+    <h1>PlayMafiaへようこそ</h1>
+    <p>こちらはPlayMafiaのヘルプセクションです。ルールや遊び方のすべてを確認できます。</p>
+    <h2>ヘルプ</h2>
+    <ul>
+        <li><span class="link" data-mlinkid="howtoplay">遊び方</span></li>
+        <li><span class="link" data-mlinkid="howtohost">ホストのやり方</span></li>
+    </ul>
+    <h2>役職</h2>    
+    {lang.rolecategories}<div class="box_cell" style="border-color:{lang.rolecategories.$.color/}">
+            <div class="box_cell_head link" style="color:{lang.rolecategories.$.color/}" data-mlinkid="role_cat_$">{lang.rolecategories.$.name/}</div>
+            {logic.roles}{?logic.roles.$$.rolecategory==$}<span class="link role_item" data-mlinkid="role_$$" style="color:{lang.roles.$$.color/}">{lang.roles.$$.displayname/}</span>&nbsp;{/}{/}
+    </div>{/}
+    <div class="box_cell" style="border-color:gray">
+        <div class="box_cell_head" style="color:gray;">ランダム役職</div>
+        {lang.rolecategories}
+            {logic.randomroles}{?logic.randomroles.$$.rolecategory==$}
+                <span class="link role_item" data-mlinkid="randomrole_$$" style="color:{lang.randomroles.$$.color/}">{lang.randomroles.$$.displayname/}</span>&nbsp;
+            {/}{/}
+        {/}
+    </div>
+</div>
+{lang.rolecategories}<div data-mhelpid="role_cat_$" data-mhelpdisplay="{lang.rolecategories.$.name/}">
+    <h1 style="color:{lang.rolecategories.$.color/};">{lang.rolecategories.$.name/}</h1>
+    <p>{lang.rolecategories.$.description/}</p>
+    <div class="box_cell">
+        <div class="box_cell_head">{lang.rolecategories.$.title/}</div>
+        {logic.roles}{?logic.roles.$$.rolecategory==$}
+            <span class="link role_item" data-mlinkid="role_$$" style="color:{lang.roles.$$.color/}">{lang.roles.$$.displayname/}</span>
+        {/}{/}
+    </div>
+    <div class="box_cell">
+        <div class="box_cell_head">{lang.rolecategories.$.name/}のランダム役職</div>
+        {logic.randomroles}{?logic.randomroles.$$.rolecategory==$}
+            <span class="link role_item" data-mlinkid="randomrole_$$" style="color:{lang.randomroles.$$.color/}">{lang.randomroles.$$.displayname/}</span>
+        {/}{/}
+    </div>
+</div>{/}
+{logic.roles}<div data-mhelpparent="role_cat_{logic.roles.$.rolecategory/}" data-mhelpid="role_$" data-mhelpdisplay="{lang.roles.$.displayname/}">
+    <h1 style="color:{lang.roles.$.color/};">{lang.roles.$.displayname/}</h1>
+    <p>{lang.roles.$.description/}</p>
+    <h3>所属陣営:</h3>
+    <span>{lang.rolecategories.(logic.roles.$.rolecategory).name/}</span>
+    <br />
+    <h3>シェリフの調査結果:</h3>
+    <span>{logic.roles.$.sheriffresult/}</span>
+    <br />
+    <h3>探偵の調査結果:</h3>
+    <span>{logic.roles.$.investigateresult/}</span>
+    <br />
+    <br />
+    <h2>行動:</h2> 
+    <ul>
+        {logic.roles.$.roleactions}<li>{lang.roleactions.$$.displayname/} - {lang.roleactions.$$.description/}</li>{/}
+    </ul> 
+    <h2>目標:</h2>
+    <ul>
+        {lang.goalobjectives.(logic.roles.$.goal)}<li>$$</li>{/}
+    </ul>   
+    <h2>ヒント:</h2>
+    <ul>
+        {lang.roles.$.hints}<li>$$</li>{/}
+    </ul>
+</div>{/}
+{logic.randomroles}<div data-mhelpparent="role_cat_{logic.randomroles.$.rolecategory/}" data-mhelpid="randomrole_$" data-mhelpdisplay="{lang.randomroles.$.displayname/}">
+    <h1 style="color:{logic.randomroles.$.color/}">{lang.randomroles.$.displayname/}</h1>
+    <p>この役職はランダム役職です。ゲーム開始時に対応する役職のいずれかにランダムで変化します。</p>
+    <div class="box_cell">
+        <div class="box_cell_head">対応する役職:</div>
+        {logic.randomroles.$.possibleroles}
+            <span class="link role_item" data-mlinkid="role_$$" style="color:{lang.roles.$$.color/}">{lang.roles.$$.displayname/}</span>
+        {/}
+    </div>
+</div>{/}
+<div data-mhelpid="howtoplay" data-mhelpdisplay="How to play">
+    <h1>遊び方</h1>
+    <p>マフィアは「情報を持つ少数派（<span class="link role_item" data-mlinkid="role_cat_1">マフィア</span>）」と「情報のない多数派（<span class="link role_item" data-mlinkid="role_cat_0">市民</span>）」が戦うゲームです。昼と夜のフェーズを繰り返し、どちらかの勢力が生き残ればゲーム終了です。</p>
+    <h2>夜の行動と役職</h2>
+    <p>ゲーム開始時に各プレイヤーに役職が割り当てられます。夜には各役職に応じた特殊な行動（暗殺、保護、調査、拘束など）を実行できます。町陣営にはヒントが与えられることもあり、シェリフや探偵がそれを担います。マフィアは夜に秘密の会話が可能です。</p> 
+    <h2>昼と裁判</h2>
+    <p>昼は全体で会話し、誰がマフィアかを話し合います。会話後、投票によって疑わしい人物を裁判にかけます。裁判では弁明時間が与えられ、その後無罪か有罪かを最終投票します。</p>
+    <h2>死亡と墓場</h2>
+    <p>プレイヤーが昼の裁判や夜の行動で死亡すると、そのプレイヤーはゲームから除外され、他の死亡プレイヤーとしか話せなくなります。名前は墓場に表示され、通常は役職も公開されます。</p>
+    <h2>中立陣営</h2>
+    <p>ゲームには多彩な役職が存在し、予測不可能な戦略が展開されます。中立陣営（<span class="link role_item" data-mlinkid="role_cat_2">中立</span>）は独自の目的を持ち、マフィアや市民とは別行動を取ります。達成難易度は高いですが、成功時の喜びも大きいです。</p>
+    <h2>勝利条件</h2>
+    <p>ゲームが進行するにつれて生存者が減り、最終的にどちらかの陣営が勝利します。勝利時にはその陣営に属するすべてのプレイヤーが勝者となります。中立役職は自陣営または他陣営と協力して勝利を目指すことも可能です。</p>
+</div>
+<div data-mhelpid="howtohost" data-mhelpdisplay="Hosting">
+    <h1>ホストのやり方</h1>
+    <p>ホストは簡単です。「ゲーム作成」ページから「Create Game」をクリックし、「設定」ボタンで以下のような項目を調整します:</p>
+    <ul>
+        <li>役職設定 - ゲーム開始時にプレイヤーに割り当てられる役職リストを作成</li>
+        <li>フェーズの時間制限 - 各フェーズの持ち時間を設定</li>
+        <li>ネーミングテーマ - プレイヤーに割り当てられる名前のテーマ</li>
+    </ul>
+</div>
+<div data-mhelpid="notfound" data-mhelpdisplay="Not Found">
+    <h1>ヘルプページが見つかりません</h1>
+    <span class="link" data-mlinkid="home">ヘルプのホームに戻るにはこちらをクリック</span>
+</div>

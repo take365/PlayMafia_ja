@@ -1,7 +1,8 @@
 var CONSTANTS = {
 
 	// Enable Debug Mode when process.env.NODE_ENV != 'production'
-	PLAYMAFIA_DEBUG_CONSTANTS_OVERRIDE: false,
+	//PLAYMAFIA_DEBUG_CONSTANTS_OVERRIDE: false,
+	PLAYMAFIA_DEBUG_CONSTANTS_OVERRIDE: true,
 	
 	// Debug on or off
 	PLAYMAFIA_DEBUG : true,

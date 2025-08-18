@@ -1,3 +1,20 @@
+function resolvePlayer(game, tid) {
+  if (tid === undefined || tid === null) return null;
+  if (tid === -1 || tid === "-1") return null; // 「対象なし」を明示的に無視
+  const key = String(tid);
+  const players = game?.players || [];
+  // uniqueid / id / index のいずれにも耐性
+  let p = players.find(p => String(p?.uniqueid ?? p?.id) === key);
+  if (!p) {
+    // 数値インデックスで来た場合に備えて
+    const idx = Number.isFinite(+tid) ? (+tid) : NaN;
+    if (Number.isInteger(idx) && idx >= 0 && idx < players.length) {
+      p = players[idx];
+    }
+  }
+  return p || null;
+}
+
 var getGameLogic = function()
 {
 	return {
@@ -114,18 +131,46 @@ var getGameLogic = function()
 			
 			// BulletProof Vests & Doctor heal
 			{
-				// Vest
-				_this.actionData.vest.forEach(function(vestA){
-					maf.log("ability-vest: game=", _this.gameid, ' vest=', JSON.stringify(vestA), maf.loglevel.VERBOSE);
-					runningPlayerState[vestA.target1].health += 1;
-					runningPlayerState[vestA.target1].lasthealer = vestA.source1;
-				});
-				// Heal
-				_this.actionData.heal.forEach(function(healA){
-					maf.log("ability-heal: game=", _this.gameid, ' heal=', JSON.stringify(healA), maf.loglevel.VERBOSE);
-					runningPlayerState[healA.target1].health += 1;
-					runningPlayerState[healA.target1].lasthealer = healA.source1;
-				});
+			// Vest（対象なしは=自分に付与）
+			_this.actionData.vest.forEach(function (vestA) {
+				try {
+				maf.log("ability-vest: game=", _this.gameid, " vest=", JSON.stringify(vestA), maf.loglevel.VERBOSE);
+
+				const gameLike = { players: runningPlayerState };
+				const src = resolvePlayer(gameLike, vestA.source1);
+				const tgt = resolvePlayer(gameLike, vestA.target1) || src; // -1/未指定なら自分へ
+
+				if (!tgt) {
+					maf.log("ability-vest: skip (no target, src=" + vestA.source1 + ", tgt=" + vestA.target1 + ")", maf.loglevel.DEBUG);
+					return;
+				}
+				if (typeof tgt.health !== "number") tgt.health = 0;
+				tgt.health += 1;
+				tgt.lasthealer = vestA.source1;
+				} catch (e) {
+				maf.log("ability-vest: error " + e.toString() + " payload=" + JSON.stringify(vestA), maf.loglevel.ERROR);
+				}
+			});
+
+			// Heal（対象なしはスキップ）
+			_this.actionData.heal.forEach(function (healA) {
+				try {
+				maf.log("ability-heal: game=", _this.gameid, " heal=", JSON.stringify(healA), maf.loglevel.VERBOSE);
+
+				const gameLike = { players: runningPlayerState };
+				const tgt = resolvePlayer(gameLike, healA.target1);
+
+				if (!tgt) {
+					maf.log("ability-heal: skip (invalid target=" + healA.target1 + ")", maf.loglevel.DEBUG);
+					return;
+				}
+				if (typeof tgt.health !== "number") tgt.health = 0;
+				tgt.health += 1;
+				tgt.lasthealer = healA.source1;
+				} catch (e) {
+				maf.log("ability-heal: error " + e.toString() + " payload=" + JSON.stringify(healA), maf.loglevel.ERROR);
+				}
+			});
 			}
 			
 			// Arsonist
@@ -153,29 +198,72 @@ var getGameLogic = function()
 				allKillAttempts = allKillAttempts.concat(_this.actionData.murder);
 				
 				// Calculate all kill attemptes
-				allKillAttempts.forEach(function(killAttempt){
-					// if bodygaurd, do that here
-					if(matchingGaurdBlock = _this.actionData.gaurd.filter(function(ga){return ga.target1 == killAttempt.target1;}).pop())
-					{
-						maf.log("ability-gaurd: game=", _this.gameid , ' matchinggaurdblock=', JSON.stringify(matchingGaurdBlock), ' killattempt=', JSON.stringify(killAttempt), maf.loglevel.VERBOSE);
-						// Remove gaurd block, can only be used to defend one attack
-						_this.actionData.gaurd.splice(_this.actionData.gaurd.indexOf(matchingGaurdBlock), 1);						
-						// Attacker dies
-						runningPlayerState[killAttempt.source1].health -= 1;
-						runningPlayerState[killAttempt.source1].lastkiller = matchingGaurdBlock.source1;
-						// Bodygaurd also dies
-						runningPlayerState[matchingGaurdBlock.source1].health -= 1;
-						runningPlayerState[matchingGaurdBlock.source1].lastkiller = killAttempt.source1;
+				// Calculate all kill attemptes
+				allKillAttempts.forEach(function (killAttempt) {
+				try {
+					const gameLike = { players: runningPlayerState };
+
+					// bodyguard 介入（ターゲット一致時のみ）
+					var matchingGaurdBlock = _this.actionData.gaurd
+					.filter(function (ga) { return ga.target1 == killAttempt.target1; })
+					.pop();
+
+					if (matchingGaurdBlock) {
+					maf.log(
+						"ability-gaurd: game=",
+						_this.gameid,
+						" matchinggaurdblock=",
+						JSON.stringify(matchingGaurdBlock),
+						" killattempt=",
+						JSON.stringify(killAttempt),
+						maf.loglevel.VERBOSE
+					);
+
+					// 1回限りなので取り除く
+					_this.actionData.gaurd.splice(_this.actionData.gaurd.indexOf(matchingGaurdBlock), 1);
+
+					// 攻撃者＆ガードのプレイヤー解決
+					const attacker = resolvePlayer(gameLike, killAttempt.source1);
+					const guarder  = resolvePlayer(gameLike, matchingGaurdBlock.source1);
+
+					if (!attacker || !guarder) {
+						maf.log(
+						"ability-gaurd: skip (attacker or guard not found) atk=" +
+							killAttempt.source1 +
+							" guard=" +
+							matchingGaurdBlock.source1,
+						maf.loglevel.DEBUG
+						);
+						return;
 					}
-					// If no bodygaurd defend, do normal health decrement.
-					else
-                    {
-						maf.log("ability-kill: game=", _this.gameid, ' killattempt=', JSON.stringify(killAttempt), maf.loglevel.VERBOSE);
-						runningPlayerState[killAttempt.target1].health -= 1;
-						runningPlayerState[killAttempt.target1].lastkiller = killAttempt.source1;
+
+					if (typeof attacker.health !== "number") attacker.health = 0;
+					if (typeof guarder.health !== "number")  guarder.health  = 0;
+
+					attacker.health -= 1;
+					attacker.lastkiller = matchingGaurdBlock.source1;
+
+					guarder.health -= 1;
+					guarder.lastkiller = killAttempt.source1;
+
+					} else {
+					// 通常キル
+					maf.log("ability-kill: game=", _this.gameid, " killattempt=", JSON.stringify(killAttempt), maf.loglevel.VERBOSE);
+
+					const target = resolvePlayer(gameLike, killAttempt.target1);
+					if (!target) {
+						maf.log("ability-kill: skip (invalid target=" + killAttempt.target1 + ")", maf.loglevel.DEBUG);
+						return;
 					}
-				});
-				
+					if (typeof target.health !== "number") target.health = 0;
+
+					target.health -= 1;
+					target.lastkiller = killAttempt.source1;
+					}
+				} catch (e) {
+					maf.log("ability-kill: error " + e.toString() + " payload=" + JSON.stringify(killAttempt), maf.loglevel.ERROR);
+				}
+				});				
 				// Calculate kill success
 				for(var victimUid in runningPlayerState)
 				{
@@ -204,37 +292,77 @@ var getGameLogic = function()
                 });
             
 				// Sherif
-				_this.actionData.interrogate.forEach(function(interrogate)
-                {
-					if(allDeaths.indexOf(interrogate.source1) != -1)return;
+				// Sherif
+				_this.actionData.interrogate.forEach(function (interrogate) {
+				try {
+					if (allDeaths.indexOf(interrogate.source1) != -1) return;
+
+					const gameLike = { players: runningPlayerState };
+					const tgt = resolvePlayer(gameLike, interrogate.target1);
+					if (!tgt) {
+					maf.log("ability-interrogate: skip (invalid target=" + interrogate.target1 + ")", maf.loglevel.DEBUG);
+					return;
+					}
+
+					// 元の _this.players[...] 参照は uniqueid を使ってOK
+					const targetPlayer = _this.players[interrogate.target1];
+					if (!targetPlayer) {
+					maf.log("ability-interrogate: skip (target not found in _this.players=" + interrogate.target1 + ")", maf.loglevel.DEBUG);
+					return;
+					}
+
 					var isSuspect = false;
-                    if(frames[interrogate.target1])isSuspect = true;
-                    else if(!!(+maf.globals.gameConfig.roles[ _this.players[interrogate.target1].role ].sheriffresult))isSuspect = true;
+					if (frames[interrogate.target1]) isSuspect = true;
+					else if (!!(+maf.globals.gameConfig.roles[targetPlayer.role].sheriffresult)) isSuspect = true;
+
 					maf.log("ability-interrogate: game=", _this.gameid, 'interrogate=', JSON.stringify(interrogate), ' isSuspect=', isSuspect, maf.loglevel.VERBOSE);
+
 					_this.action_private_messages.push({
-						'receiver':interrogate.source1,
-						'chat': [(isSuspect? "servermessages.interrogate_suspect_chat" : "servermessages.interrogate_legit_chat"), interrogate.target1],
-						'attached_deathids':false
+					'receiver': interrogate.source1,
+					'chat': [(isSuspect ? "servermessages.interrogate_suspect_chat" : "servermessages.interrogate_legit_chat"), interrogate.target1],
+					'attached_deathids': false
 					});
+				} catch (e) {
+					maf.log("ability-interrogate: error " + e.toString() + " payload=" + JSON.stringify(interrogate), maf.loglevel.ERROR);
+				}
 				});
                 
                 // Investigator + Consigliere
-				_this.actionData.shadow.concat(_this.actionData.research).forEach(function(investigate)
-				{
-					if(allDeaths.indexOf(investigate.source1) != -1)return;
-					var prefix = maf.globals.gameConfig.roles[ _this.players[investigate.target1].role ].investigateresult;
+				// Investigator + Consigliere
+				_this.actionData.shadow.concat(_this.actionData.research).forEach(function (investigate) {
+				try {
+					if (allDeaths.indexOf(investigate.source1) != -1) return;
+
+					const gameLike = { players: runningPlayerState };
+					const tgt = resolvePlayer(gameLike, investigate.target1);
+					if (!tgt) {
+					maf.log("ability-investigate: skip (invalid target=" + investigate.target1 + ")", maf.loglevel.DEBUG);
+					return;
+					}
+
+					const targetPlayer = _this.players[investigate.target1];
+					if (!targetPlayer) {
+					maf.log("ability-investigate: skip (target not found in _this.players=" + investigate.target1 + ")", maf.loglevel.DEBUG);
+					return;
+					}
+
+					var prefix = maf.globals.gameConfig.roles[targetPlayer.role].investigateresult;
 					maf.log("ability-investigate: game=", _this.gameid, 'investigate=', JSON.stringify(investigate), ' message_prefix=', prefix, maf.loglevel.VERBOSE);
+
 					_this.action_private_messages.push({
-						'receiver':investigate.source1,
-						'chat': ["servermessages.investigate_"+prefix+"_chat", investigate.target1],
-						'attached_deathids':false
+					'receiver': investigate.source1,
+					'chat': ["servermessages.investigate_" + prefix + "_chat", investigate.target1],
+					'attached_deathids': false
 					});
 					_this.action_private_messages.push({
-						'receiver':investigate.target1,
-						'chat': "servermessages.investigate_"+prefix+"_target_chat",
-						'attached_deathids':false
+					'receiver': investigate.target1,
+					'chat': "servermessages.investigate_" + prefix + "_target_chat",
+					'attached_deathids': false
 					});
-                });
+				} catch (e) {
+					maf.log("ability-investigate: error " + e.toString() + " payload=" + JSON.stringify(investigate), maf.loglevel.ERROR);
+				}
+				});
                 
 			
 				// Disguiser replaces if succeeded in a kill
@@ -313,23 +441,36 @@ var getGameLogic = function()
                 });                
                 
 				// Silencer silences
-				_this.actionData.silence.forEach(function(silenceA){
+				// Silencer silences
+				_this.actionData.silence.forEach(function (silenceA) {
+				try {
 					maf.log("ability-silence: game=", _this.gameid, ' silence=', JSON.stringify(silenceA), maf.loglevel.VERBOSE);
+
+					const gameLike = { players: runningPlayerState };
+					const tgt = resolvePlayer(gameLike, silenceA.target1);
+					if (!tgt) {
+					maf.log("ability-silence: skip (invalid target=" + silenceA.target1 + ")", maf.loglevel.DEBUG);
+					return;
+					}
+
 					_this.action_effects.push({
-						'effect_type': 'silence',
-						'target1': silenceA.target1,
-						'day': _this.day,
-                        'phase':-1
+					'effect_type': 'silence',
+					'target1': silenceA.target1,
+					'day': _this.day,
+					'phase': -1
 					});
-                    var pm = _this.action_private_messages.filter(function(pm){return pm.receiver && pm.receiver == silenceA.target1 && pm.chat && pm.chat[0] == "servermessages.player_silenced_chat";}).pop();
-                    if(!pm)
-                    {
-                        _this.action_private_messages.push({
-                            'receiver': silenceA.target1,
-                            'chat': "servermessages.player_silenced_chat",
-                            'attached_deathids':false
-                        });
-                    }
+
+					var pm = _this.action_private_messages.filter(function (pm) { return pm.receiver && pm.receiver == silenceA.target1 && pm.chat && pm.chat[0] == "servermessages.player_silenced_chat"; }).pop();
+					if (!pm) {
+					_this.action_private_messages.push({
+						'receiver': silenceA.target1,
+						'chat': "servermessages.player_silenced_chat",
+						'attached_deathids': false
+					});
+					}
+				} catch (e) {
+					maf.log("ability-silence: error " + e.toString() + " payload=" + JSON.stringify(silenceA), maf.loglevel.ERROR);
+				}
 				});
 			}
 			

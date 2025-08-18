@@ -289,33 +289,29 @@ var GameServer = function(){
 			}
 			// Get ready to cleanup
 			db.multi()
-				.srem('maf:games:activegames', gameid)
-				.sadd('maf:games:gamesbeingcleaned', gameid)
-				.exec(function(err){
-					var obj = {'gameid':+gameid};
-					db.multi()
-						.hget('maf:games:'+gameid, 'day')
-						.smembers('maf:games:'+gameid+':playerlist')
-						.exec(function(err, replies){
-							// Get all the info we are gonna need
-							obj.day = +replies[0],
-							obj.playerids = replies[1];	
-							// clean up general stuff
-							cleanupGeneral(obj, function(){			
-								// Cleanup actions & votes
-								cleanupActionsAndVotes(obj, function(){
-									// cleanup deaths & messages
-									cleanupDeathsAndMessages(obj, function(){
-										cleanupRoleChanges(obj, function(){
-											cleanupPlayers(obj, function(){
-												db.srem('maf:games:gamesbeingcleaned', gameid, callback || null);
-											});
-										});
-									});
-								});
+			.srem('maf:games:activegames', String(gameid))
+			.sadd('maf:games:gamesbeingcleaned', String(gameid))
+			.exec(function(err){
+				const obj = { gameid: +gameid };
+				db.multi()
+				.hget('maf:games:' + gameid, 'day')
+				.smembers('maf:games:' + gameid + ':playerlist')
+				.exec(function(err, replies){
+					obj.day = +replies[0];
+					obj.playerids = replies[1];
+					cleanupGeneral(obj, function(){
+					cleanupActionsAndVotes(obj, function(){
+						cleanupDeathsAndMessages(obj, function(){
+						cleanupRoleChanges(obj, function(){
+							cleanupPlayers(obj, function(){
+							db.srem('maf:games:gamesbeingcleaned', String(gameid), callback || null);
 							});
 						});
+						});
+					});
+					});
 				});
+			});		
 		});
 	}
 	// General
@@ -612,7 +608,7 @@ var GameServer = function(){
 						multi = db.multi();
 						userids.forEach(function(userid){multi.hmset('maf:users:'+userid, {'currentgame':-1});});
 						multi
-							.srem('maf:games:activegames', gameid)// Remove server from activegames
+							.srem('maf:games:activegames', String(gameid))// Remove server from activegames
 							.publish('maf.serverupdates.1', JSON.stringify({
 								'subType':'listing_update',
 								'message':[{'updateType':'REMOVE', 'gameid':gameid}]
@@ -1489,6 +1485,7 @@ var GameServer = function(){
 				multi.exec(function(err, votes){
 					var voteTable = {}, recid = false, maxcount = 0;
 					votes.forEach(function(vote){
+						if (!vote || typeof vote !== "object") return; // ← ガードを追加
 						recid = vote.receiver_uniqueid;
 						voteTable[recid] = (voteTable[recid]?voteTable[recid]:0)+(+vote.vote_value);
 						if(voteTable[recid] > maxcount){
@@ -1580,11 +1577,20 @@ var GameServer = function(){
 					});
 				});		
 				killPlayers(logicObj.gameid, deathAr, function(){
-					// Finally callback with important details to be published
-                    if(hideDeadRoles){
-                        logicObj.action_private_messages.forEach(function(obj){obj.deathrole = -2;});
-                    }
-					callback.apply(this, [logicObj.action_deaths, logicObj.action_public_messages, logicObj.action_private_messages]);
+					if (hideDeadRoles) {
+						logicObj.action_private_messages.forEach(function(obj){
+							if (obj) obj.deathrole = -2;
+						});
+					}
+
+					// null/undefined を除外
+					const privateMsgs = logicObj.action_private_messages.filter(m => m && typeof m === "object");
+
+					callback.apply(this, [
+						logicObj.action_deaths,
+						logicObj.action_public_messages,
+						privateMsgs
+					]);
 				});
 			});
 		});
@@ -1860,12 +1866,17 @@ var GameServer = function(){
 		}
 		multic.exec(function(){
 			db.hset('maf:games:'+gameid, 'victorymessage', gameStateObj.victoryMessage, function(){
+				if (typeof gameid !== "undefined" && gameid !== null) {
 				db.multi()
-					.srem('maf:games:activegames',gameid)
+					.srem('maf:games:activegames', String(gameid))
 					.hset('maf:games:'+gameid, 'gamestate', 3)
 					.exec(function(){
-						publishGameState(gameid, false, callback);
+					publishGameState(gameid, false, callback);
 					});
+				} else {
+				maf.log("Error: gameid is null/undefined when calling srem", maf.loglevel.ERROR);
+				callback(); // or fallback handling
+				}
 			});
 		});
 	}
